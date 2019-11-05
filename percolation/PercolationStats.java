@@ -26,6 +26,8 @@ public class PercolationStats {
         }
         this.numberOfSitesPerRow = n;
         percolationThresholds = new double[trials];
+
+        doMultipleExperiments();
     }
 
     // Getter for the number of sites per row
@@ -82,8 +84,6 @@ public class PercolationStats {
         int n = Integer.parseInt(args[0]);
         int trials = Integer.parseInt(args[1]);
         PercolationStats pstats = new PercolationStats(n, trials);
-
-        pstats.doMultipleExperiments();
 
         System.out.println("mean                     = " + pstats.mean());
         System.out.println("stddev                   = " + pstats.stddev());
