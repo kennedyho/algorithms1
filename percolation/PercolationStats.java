@@ -11,11 +11,13 @@ import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
 
 public class PercolationStats {
+    private static final double CONFIDENCE = 1.96; // confidence constant for calculation
+
     private Percolation percolation; // Object of the class Percolation
     private double[] percolationThresholds; // an array of percolation thresholds
-    private int numberOfSitesPerRow; // number of sites per row entered by user
-    private double meanVal;
-    private double stddevVal;
+    private final int numberOfSitesPerRow; // number of sites per row entered by user
+    private double meanVal; // sample mean value of the percolation thresholds
+    private double stddevVal; // standard deviation value of the percolation thresholds
 
     // perform independent trials on an n-by-n grid
     public PercolationStats(int n, int trials) {
@@ -23,7 +25,6 @@ public class PercolationStats {
             throw new IllegalArgumentException();
         }
         this.numberOfSitesPerRow = n;
-        percolation = new Percolation(n);
         percolationThresholds = new double[trials];
     }
 
@@ -46,20 +47,20 @@ public class PercolationStats {
 
     // low endpoint of 95% confidence interval
     public double confidenceLo() {
-        return this.meanVal - ((1.96 * Math.sqrt(this.stddevVal)) / Math
+        return this.meanVal - ((CONFIDENCE * Math.sqrt(this.stddevVal)) / Math
                 .sqrt(percolationThresholds.length));
     }
 
     // high endpoint of 95% confidence interval
     public double confidenceHi() {
-        return this.meanVal + ((1.96 * Math.sqrt(this.stddevVal)) / Math
+        return this.meanVal + ((CONFIDENCE * Math.sqrt(this.stddevVal)) / Math
                 .sqrt(percolationThresholds.length));
     }
 
     // do multiple experiments based on the number of trials
-    public void doMultipleExperiments() {
+    private void doMultipleExperiments() {
         for (int i = 0; i < percolationThresholds.length; i++) {
-            percolation.reset();
+            percolation = new Percolation(numberOfSitesPerRow);
             percolationThresholds[i] = getPercolationThreshold();
         }
     }

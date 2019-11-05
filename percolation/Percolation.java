@@ -26,17 +26,9 @@ public class Percolation {
         }
     }
 
-    // resetting the percolation model
-    public void reset() {
-        for (int i = 0; i < this.sitesPerRow * this.sitesPerRow; i++) {
-            grid[i] = i;
-            size[i] = 0;
-        }
-    }
-
     // opens the site (row, col) if it is not open already
     public void open(int row, int col) {
-        if (row > sitesPerRow || row < 0 || col > sitesPerRow || col < 0) {
+        if (row >= sitesPerRow || row < 0 || col >= sitesPerRow || col < 0) {
             throw new IllegalArgumentException();
         }
         int index = col + (row * sitesPerRow);
@@ -67,7 +59,7 @@ public class Percolation {
 
     // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
-        if (row > sitesPerRow || row < 0 || col > sitesPerRow || col < 0) {
+        if (row >= sitesPerRow || row < 0 || col >= sitesPerRow || col < 0) {
             throw new IllegalArgumentException();
         }
         int index = col + (row * sitesPerRow);
@@ -79,7 +71,7 @@ public class Percolation {
 
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
-        if (row > sitesPerRow || row < 0 || col > sitesPerRow || col < 0) {
+        if (row >= sitesPerRow || row < 0 || col >= sitesPerRow || col < 0) {
             throw new IllegalArgumentException();
         }
 
