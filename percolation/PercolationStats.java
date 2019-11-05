@@ -15,6 +15,8 @@ public class PercolationStats {
 
     private double[] percolationThresholds; // an array of percolation thresholds
     private final int numberOfSitesPerRow; // number of sites per row entered by user
+    private double meanVal; // mean value of percolation thresholds
+    private double stddevVal; // std dev value of percolation thresholds
 
     // perform independent trials on an n-by-n grid
     public PercolationStats(int n, int trials) {
@@ -25,6 +27,9 @@ public class PercolationStats {
         percolationThresholds = new double[trials];
 
         doMultipleExperiments();
+
+        meanVal = StdStats.mean(percolationThresholds);
+        stddevVal = StdStats.stddev(percolationThresholds);
     }
 
     // Getter for the number of sites per row
@@ -34,24 +39,24 @@ public class PercolationStats {
 
     // sample mean of percolation threshold
     public double mean() {
-        return StdStats.mean(percolationThresholds);
+        return this.meanVal;
     }
 
     // sample standard deviation of percolation threshold
     public double stddev() {
-        return StdStats.stddev(percolationThresholds);
+        return this.stddevVal;
     }
 
     // low endpoint of 95% confidence interval
     public double confidenceLo() {
-        return mean() - ((CONFIDENCE * Math.sqrt(stddev())) / Math
-                .sqrt(percolationThresholds.length));
+        return this.meanVal - CONFIDENCE * Math.sqrt(this.stddevVal) / Math
+                .sqrt(percolationThresholds.length);
     }
 
     // high endpoint of 95% confidence interval
     public double confidenceHi() {
-        return mean() + ((CONFIDENCE * Math.sqrt(stddev())) / Math
-                .sqrt(percolationThresholds.length));
+        return this.meanVal + CONFIDENCE * Math.sqrt(this.stddevVal) / Math
+                .sqrt(percolationThresholds.length);
     }
 
     // do multiple experiments based on the number of trials
