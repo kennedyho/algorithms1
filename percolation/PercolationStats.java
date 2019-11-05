@@ -15,8 +15,6 @@ public class PercolationStats {
 
     private double[] percolationThresholds; // an array of percolation thresholds
     private final int numberOfSitesPerRow; // number of sites per row entered by user
-    private double meanVal; // sample mean value of the percolation thresholds
-    private double stddevVal; // standard deviation value of the percolation thresholds
 
     // perform independent trials on an n-by-n grid
     public PercolationStats(int n, int trials) {
@@ -36,25 +34,23 @@ public class PercolationStats {
 
     // sample mean of percolation threshold
     public double mean() {
-        this.meanVal = StdStats.mean(percolationThresholds);
-        return this.meanVal;
+        return StdStats.mean(percolationThresholds);
     }
 
     // sample standard deviation of percolation threshold
     public double stddev() {
-        this.stddevVal = StdStats.stddev(percolationThresholds);
-        return this.stddevVal;
+        return StdStats.stddev(percolationThresholds);
     }
 
     // low endpoint of 95% confidence interval
     public double confidenceLo() {
-        return this.meanVal - ((CONFIDENCE * Math.sqrt(this.stddevVal)) / Math
+        return mean() - ((CONFIDENCE * Math.sqrt(stddev())) / Math
                 .sqrt(percolationThresholds.length));
     }
 
     // high endpoint of 95% confidence interval
     public double confidenceHi() {
-        return this.meanVal + ((CONFIDENCE * Math.sqrt(this.stddevVal)) / Math
+        return mean() + ((CONFIDENCE * Math.sqrt(stddev())) / Math
                 .sqrt(percolationThresholds.length));
     }
 
