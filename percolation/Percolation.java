@@ -11,7 +11,7 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
     private boolean[] grid;    // the model of the n-by-n grid
-    private WeightedQuickUnionUF wquf; // Weighted Quick Union Find object
+    private final WeightedQuickUnionUF wquf; // Weighted Quick Union Find object
     private final int sitesPerRow; // keep track of the number of grid per row (n)
     private int numberOfOpenSites; // keep track of the number of sites that are opened
 
@@ -21,13 +21,14 @@ public class Percolation {
             throw new IllegalArgumentException("n = " + Integer.toString(n));
         }
         this.sitesPerRow = n;
-        wquf = new WeightedQuickUnionUF(n * n + 1); // with 1 extra virtual site
+        wquf = new WeightedQuickUnionUF(n * n + 2); // with 1 extra virtual site
         grid = new boolean[n * n];
         numberOfOpenSites = 0;
 
         // connect top rows to virtual site n*n,
         for (int i = 0; i < n; i++) {
             wquf.union(i, n * n);
+            wquf.union(i + n * n - n, n * n + 1);
         }
     }
 
@@ -99,13 +100,6 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
-        for (int i = grid.length - sitesPerRow; i < grid.length; i++) {
-            int row = i / sitesPerRow + 1;
-            int col = i % sitesPerRow + 1;
-            if (isFull(row, col)) {
-                return true;
-            }
-        }
-        return false;
+        return wquf.connected(grid.length, grid.length + 1);
     }
 }

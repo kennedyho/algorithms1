@@ -15,8 +15,8 @@ public class PercolationStats {
 
     private double[] percolationThresholds; // an array of percolation thresholds
     private final int numberOfSitesPerRow; // number of sites per row entered by user
-    private double meanVal; // mean value of percolation thresholds
-    private double stddevVal; // std dev value of percolation thresholds
+    private final double meanVal; // mean value of percolation thresholds
+    private final double stddevVal; // std dev value of percolation thresholds
 
     // perform independent trials on an n-by-n grid
     public PercolationStats(int n, int trials) {
