@@ -68,8 +68,8 @@ public class PercolationStats {
     // do the percolation experiment and get threshold
     private double getPercolationThreshold() {
         while (!percolation.percolates()) {
-            int row = StdRandom.uniform(getNumberOfSitesPerRow());
-            int col = StdRandom.uniform(getNumberOfSitesPerRow());
+            int row = StdRandom.uniform(getNumberOfSitesPerRow()) + 1;
+            int col = StdRandom.uniform(getNumberOfSitesPerRow()) + 1;
             percolation.open(row, col);
         }
         double openedSitesNo = percolation.numberOfOpenSites();

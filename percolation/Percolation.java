@@ -15,7 +15,7 @@ public class Percolation {
     // creates n-by-n grid, with all sites initially blocked
     public Percolation(int n) {
         if (n <= 0) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("n = " + Integer.toString(n));
         }
         this.sitesPerRow = n;
         grid = new int[n * n];
@@ -28,30 +28,31 @@ public class Percolation {
 
     // opens the site (row, col) if it is not open already
     public void open(int row, int col) {
-        if (row >= sitesPerRow || row < 0 || col >= sitesPerRow || col < 0) {
-            throw new IllegalArgumentException();
+        if (row > sitesPerRow || row <= 0 || col > sitesPerRow || col <= 0) {
+            throw new IllegalArgumentException(
+                    "Row: " + Integer.toString(row) + "\tColumn: " + Integer.toString(col));
         }
-        int index = col + (row * sitesPerRow);
+        int index = (col - 1) + ((row - 1) * sitesPerRow);
         if (size[index] == 0) {
             size[index] = 1; // change the size to 1 to indicate an opened site
 
             // If not top row, union with the open site above
-            if (row != 0 && isOpen(row - 1, col)) {
+            if (row != 1 && isOpen(row - 1, col)) {
                 union(index, index - sitesPerRow);
             }
 
             // If not bottom row, union with the open site below
-            if (row != sitesPerRow - 1 && isOpen(row + 1, col)) {
+            if (row != sitesPerRow && isOpen(row + 1, col)) {
                 union(index, index + sitesPerRow);
             }
 
             // If not leftmost column, union with the open left site
-            if (col != 0 && isOpen(row, col - 1)) {
+            if (col != 1 && isOpen(row, col - 1)) {
                 union(index, index - 1);
             }
 
             // If not rightmost column, union with the open right site
-            if (col != sitesPerRow - 1 && isOpen(row, col + 1)) {
+            if (col != sitesPerRow && isOpen(row, col + 1)) {
                 union(index, index + 1);
             }
         }
@@ -59,10 +60,11 @@ public class Percolation {
 
     // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
-        if (row >= sitesPerRow || row < 0 || col >= sitesPerRow || col < 0) {
-            throw new IllegalArgumentException();
+        if (row > sitesPerRow || row <= 0 || col > sitesPerRow || col <= 0) {
+            throw new IllegalArgumentException(
+                    "Row: " + Integer.toString(row) + "\tColumn: " + Integer.toString(col));
         }
-        int index = col + (row * sitesPerRow);
+        int index = (col - 1) + ((row - 1) * sitesPerRow);
         if (size[index] == 0) {
             return false;
         }
@@ -71,15 +73,16 @@ public class Percolation {
 
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
-        if (row >= sitesPerRow || row < 0 || col >= sitesPerRow || col < 0) {
-            throw new IllegalArgumentException();
+        if (row > sitesPerRow || row <= 0 || col > sitesPerRow || col <= 0) {
+            throw new IllegalArgumentException(
+                    "Row: " + Integer.toString(row) + "\tColumn: " + Integer.toString(col));
         }
 
         if (!isOpen(row, col)) { // can't be full if site is not even opened
             return false;
         }
 
-        int index = col + (row * sitesPerRow);
+        int index = (col - 1) + ((row - 1) * sitesPerRow);
 
         // checks if any of the sites in first row is connected to with this site
         for (int i = 0; i < sitesPerRow; i++) {
@@ -104,8 +107,8 @@ public class Percolation {
     // does the system percolate?
     public boolean percolates() {
         for (int i = grid.length - sitesPerRow; i < grid.length; i++) {
-            int row = i / sitesPerRow;
-            int col = i % sitesPerRow;
+            int row = i / sitesPerRow + 1;
+            int col = i % sitesPerRow + 1;
             if (isFull(row, col)) {
                 return true;
             }
