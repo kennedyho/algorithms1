@@ -21,13 +21,15 @@ public class Deque<Item> implements Iterable<Item> {
     // A single node with double link next and previous
     private class Node {
         private Item item;
-        private Node next;
-        private Node previous;
+        private Node next; // link to next node
+        private Node previous; // link to previous node
 
+        // getter of item
         public Item getItem() {
             return item;
         }
 
+        // setter of item
         public void setItem(Item item) {
             this.item = item;
         }

@@ -10,8 +10,8 @@ import java.util.Iterator;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
 
-    private Item[] randQ;
-    private int N;
+    private Item[] randQ; // the data structure for queue
+    private int num;
 
     // construct an empty randomized queue
     public RandomizedQueue() {
@@ -20,12 +20,12 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     // is the randomized queue empty?
     public boolean isEmpty() {
-        return N == 0;
+        return num == 0;
     }
 
     // return the number of items on the randomized queue
     public int size() {
-        return N;
+        return num;
     }
 
     // add the item
@@ -34,10 +34,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             throw new IllegalArgumentException("Item is null!");
         }
 
-        if (N == randQ.length) {
+        // if queue is full, double the array size
+        if (num == randQ.length) {
             resize(randQ.length * 2);
         }
-        randQ[N++] = item;
+        randQ[num++] = item;
     }
 
     // remove and return a random item
@@ -45,25 +46,30 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         if (isEmpty()) {
             throw new java.util.NoSuchElementException();
         }
-        int dqIndex = StdRandom.uniform(N);
+        // return a item at a random index and replace with the last item in queue
+        int dqIndex = StdRandom.uniform(num);
         Item item = randQ[dqIndex];
-        randQ[dqIndex] = randQ[--N];
-        randQ[N] = null;
-        if (N > 0 && N == randQ.length / 4) {
-            resize(randQ.length / 2);
+        randQ[dqIndex] = randQ[--num];
+        randQ[num] = null;
+        // if the number of items is a quarter
+        if (num > 0 && num == randQ.length / 4) {
+            resize(randQ.length / 2); // reduce the size by half
         }
         return item;
     }
 
     // return a random item (but do not remove it)
     public Item sample() {
-        return randQ[StdRandom.uniform(N)];
+        if (isEmpty()) {
+            throw new java.util.NoSuchElementException();
+        }
+        return randQ[StdRandom.uniform(num)];
     }
 
     // resize the array when it's full and also when it's a quarter full
     private void resize(int capacity) {
         Item[] copy = (Item[]) new Object[capacity];
-        for (int i = 0; i < N; i++) {
+        for (int i = 0; i < num; i++) {
             copy[i] = randQ[i];
         }
         randQ = copy;
@@ -76,13 +82,15 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     private class RandomIterator implements Iterator<Item> {
 
-        private int current = N;
-        private Item[] randomized = copyAndShuffle();
+        private int current = num; // current number of items
+        private final Item[] randomized = copyAndShuffle(); // a copy of randQ which is shuffled
 
+        // is there a next item?
         public boolean hasNext() {
             return current != 0;
         }
 
+        // return the next item and go to the next index
         public Item next() {
             if (!hasNext()) {
                 throw new java.util.NoSuchElementException();
@@ -95,9 +103,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             throw new UnsupportedOperationException();
         }
 
+        // copy the current randomized queue to a new array and shuffle it uniformly
         private Item[] copyAndShuffle() {
-            Item[] array = (Item[]) new Object[N];
-            for (int i = 0; i < N; i++) {
+            Item[] array = (Item[]) new Object[num];
+            for (int i = 0; i < num; i++) {
                 array[i] = randQ[i];
             }
             StdRandom.shuffle(array);
