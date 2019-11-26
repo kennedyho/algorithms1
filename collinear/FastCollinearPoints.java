@@ -10,32 +10,35 @@ import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class FastCollinearPoints {
     private final LineSegment[] segments;
 
     // finds all line segments containing 4 or more points
     public FastCollinearPoints(Point[] points) {
-        if (points == null) {
+        if (points == null) { // corner case
             throw new IllegalArgumentException();
         }
 
+        // check if any point is null
         for (int i = 0; i < points.length; i++) {
             if (points[i] == null) {
                 throw new IllegalArgumentException();
             }
         }
 
+        // clone the points array so the original input is not altered
         Point[] pointsCp = points.clone();
-        Arrays.sort(pointsCp);
+        // check for duplicate points and throw exception
         for (int i = 0; i < pointsCp.length - 1; i++) {
             if (pointsCp[i].compareTo(pointsCp[i + 1]) == 0) {
                 throw new IllegalArgumentException();
             }
         }
 
+        // temporary array list for the line segments
         ArrayList<LineSegment> segmentList = new ArrayList<LineSegment>();
+        // array for storing points ordered by slopeOrder
         Point[] soPoints = new Point[pointsCp.length - 1];
         for (int p = 0; p < pointsCp.length; p++) {
 
@@ -48,30 +51,45 @@ public class FastCollinearPoints {
                 soPoints[i] = pointsCp[i + skipCount];
             }
 
-            MergeX.sort(soPoints, pointsCp[p].slopeOrder());
-            int currentIdx = 0;
-            int counter = 0;
-            for (int q = 0; q < soPoints.length; q++) {
-                if (Double.compare(pointsCp[p].slopeTo(soPoints[currentIdx]),
-                                   pointsCp[p].slopeTo(soPoints[q])) == 0) {
-                    counter++;
+            MergeX.sort(soPoints, pointsCp[p].slopeOrder()); // sort by slopeOrder
+            int q = 0;
+            while (q < soPoints.length - 1) {
+                ArrayList<Point> tempPointList = new ArrayList<>();
+                tempPointList.add(soPoints[q]); // insert element used to compare
+                for (int r = q + 1; r < soPoints.length; r++) {
+                    if (Double.compare(pointsCp[p].slopeTo(soPoints[q]),
+                                       pointsCp[p].slopeTo(soPoints[r])) == 0) {
+                        tempPointList.add(soPoints[r]);
+                    }
+                    else {
+                        break;
+                    }
+                }
+
+                if (tempPointList.size() >= 3) {
+                    tempPointList.add(pointsCp[p]);
+                    Point[] tempPoints = tempPointList.toArray(new Point[tempPointList.size()]);
+                    MergeX.sort(tempPoints); // sort by natural order
+                    // Test print code
+                    /*
+                    StdOut.println("Current P is " + pointsCp[p]);
+                    for (int i = 0; i < tempPoints.length; i++) {
+                        StdOut.println(tempPoints[i]);
+                    }
+                    StdOut.println();
+                    */
+                    // get the line segment from the min to the max
+                    if (pointsCp[p].compareTo(tempPoints[0]) == 0)
+                        segmentList.add(new LineSegment(tempPoints[0],
+                                                        tempPoints[tempPoints.length - 1]));
+                    q += tempPointList.size() - 1;
                 }
                 else {
-                    if (counter >= 3) {
-                        Point[] tempPoints = new Point[counter + 1];
-                        for (int i = 0; i < tempPoints.length; i++) {
-                            tempPoints[i] = soPoints[currentIdx + i];
-                        }
-                        MergeX.sort(tempPoints);
-                        if (pointsCp[p].compareTo(tempPoints[0]) == 0)
-                            segmentList.add(new LineSegment(tempPoints[0],
-                                                            tempPoints[tempPoints.length - 1]));
-                    }
-                    counter = 0;
-                    currentIdx = q;
+                    q += tempPointList.size();
                 }
             }
         }
+        // convert the array list to array
         segments = segmentList.toArray(new LineSegment[segmentList.size()]);
     }
 

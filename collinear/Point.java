@@ -96,7 +96,7 @@ public class Point implements Comparable<Point> {
         if (that == null) {
             throw new NullPointerException();
         }
-        if (this.x == that.x && this.y == that.y) {
+        if (this.x == that.x && this.y == that.y) { // equal points
             return 0;
         }
         else if (this.y < that.y || (this.y == that.y && this.x < that.x)) {
@@ -119,7 +119,7 @@ public class Point implements Comparable<Point> {
     private class SlopeOrder implements Comparator<Point> {
         @Override
         public int compare(Point point1, Point point2) {
-            if (point1 == null || point2 == null) {
+            if (point1 == null || point2 == null) { // edge cases
                 throw new NullPointerException();
             }
             if (slopeTo(point1) < slopeTo(point2)) {

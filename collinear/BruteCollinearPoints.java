@@ -21,6 +21,7 @@ public class BruteCollinearPoints {
             throw new IllegalArgumentException();
         }
 
+        // check for null elements - edge cases
         for (int i = 0; i < points.length; i++) {
             if (points[i] == null) {
                 throw new IllegalArgumentException();
@@ -28,21 +29,24 @@ public class BruteCollinearPoints {
 
         }
 
+        // Clone the array to prevent altering the input
         Point[] pointsCp = points.clone();
-        MergeX.sort(pointsCp);
+        MergeX.sort(pointsCp); // sort the points in natural order
 
+        // check for duplicate elements - edge cases
         for (int i = 0; i < pointsCp.length - 1; i++) {
             if (pointsCp[i].compareTo(pointsCp[i + 1]) == 0) {
                 throw new IllegalArgumentException();
             }
         }
 
+        // temporary array list to store the line segments
         ArrayList<LineSegment> segmentList = new ArrayList<LineSegment>();
         for (int p = 0; p < pointsCp.length - 3; p++) {
             for (int q = p + 1; q < pointsCp.length - 2; q++) {
                 for (int r = q + 1; r < pointsCp.length - 1; r++) {
                     if (Double.compare(pointsCp[p].slopeTo(pointsCp[q]),
-                                       pointsCp[q].slopeTo(pointsCp[r]))
+                                       pointsCp[p].slopeTo(pointsCp[r]))
                             != 0) {
                         continue;
                     }
@@ -59,6 +63,7 @@ public class BruteCollinearPoints {
                 }
             }
         }
+        // convert the line segments array list to array
         segments = segmentList.toArray(new LineSegment[segmentList.size()]);
     }
 
