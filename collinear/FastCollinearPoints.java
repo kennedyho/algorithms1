@@ -29,6 +29,7 @@ public class FastCollinearPoints {
 
         // clone the points array so the original input is not altered
         Point[] pointsCp = points.clone();
+        MergeX.sort(pointsCp);
         // check for duplicate points and throw exception
         for (int i = 0; i < pointsCp.length - 1; i++) {
             if (pointsCp[i].compareTo(pointsCp[i + 1]) == 0) {
