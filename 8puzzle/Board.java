@@ -4,8 +4,6 @@
  *  Description: Slider Puzzle assignment for Algorithms I Week 4 Assignment
  **************************************************************************** */
 
-import edu.princeton.cs.algs4.StdOut;
-
 public class Board {
 
     private int[][] myBoard;    // current board
@@ -49,13 +47,14 @@ public class Board {
      * @return string representation of this board
      */
     public String toString() {
-        StdOut.println(dimension());
+        String representation = dimension() + "\n";
         for (int row = 0; row < myBoard.length; row++) {
             for (int col = 0; col < myBoard[row].length; col++) {
-                StdOut.print(" " + formatWidth(myBoard[row][col], 5));
+                representation += " " + formatWidth(myBoard[row][col], 5);
             }
-            StdOut.println();
+            representation += "\n";
         }
+        return representation;
     }
 
     /**
